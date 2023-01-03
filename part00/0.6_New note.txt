@@ -1,0 +1,14 @@
+title Situation of New Note in SPA
+
+note over browser: 
+Adding new item to the DOM ul node
+end note 
+note over browser:
+browser re-render the list 
+end note
+browser->server: HTTP POST to https://studies.cs.helsinki.fi/exampleapp/new_note_spa to send a new note 
+note over server: 
+server save the new note data 
+end note 
+
+server-->browser: Code 201 (new note successfully added) 

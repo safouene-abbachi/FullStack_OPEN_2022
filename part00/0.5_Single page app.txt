@@ -1,0 +1,23 @@
+title Single page app
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: Returns HTML_code 
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: Returns the main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server-->browser:  Returns the spa.js
+
+
+note over browser:
+spa.js to render the view on the browser
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+note over server:
+server execute query to get all the data
+end note 
+server->browser: data.json  [{ content: "HTML is easy", date: "2019-05-23" }, ...] 
+note over browser:
+spa.js redraw the note list 
+based on the returned data
+end note
