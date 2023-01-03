@@ -124,14 +124,17 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      return books
-        .filter((book) => book.genres.includes(args.genre))
-        .map((el) => {
-          return {
-            title: el.title,
-            author: el.author,
-          };
-        });
+      if (args.genre) {
+        return books
+          .filter((book) => book.genres.includes(args.genre))
+          .map((el) => {
+            return {
+              title: el.title,
+              author: el.author,
+            };
+          });
+      }
+      return books;
     },
     allAuthors: () => authors,
   },
