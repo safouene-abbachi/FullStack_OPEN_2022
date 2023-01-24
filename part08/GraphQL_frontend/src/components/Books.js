@@ -35,7 +35,9 @@ const Books = (props) => {
     return (
       <div>
         <h2>books</h2>
-
+        <p>
+          In genre <b>{genre}</b>
+        </p>
         <table>
           <tbody>
             <tr>
@@ -52,6 +54,7 @@ const Books = (props) => {
             ))}
           </tbody>
         </table>
+
         {booksGenre.map((book) => (
           <button key={book} onClick={() => setGenre(book)}>
             {book}
