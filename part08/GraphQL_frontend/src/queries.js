@@ -20,6 +20,7 @@ export const ALL_BOOKS = gql`
       }
       published
       title
+      genres
     }
   }
 `;

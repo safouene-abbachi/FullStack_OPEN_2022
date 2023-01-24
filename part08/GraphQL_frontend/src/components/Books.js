@@ -1,9 +1,26 @@
+import { useMemo, useState } from 'react';
 import { ALL_BOOKS } from '../queries';
 import { useQuery } from '@apollo/client';
 
 const Books = (props) => {
   const { error, loading, data } = useQuery(ALL_BOOKS);
-  console.log('🚀 ~ data', data);
+  const [genre, setGenre] = useState('all genres');
+  const filterByGenre = useMemo(() => {
+    if (genre && genre !== 'all genres') {
+      return data?.allBooks?.filter((book) => {
+        return book.genres.includes(genre);
+      });
+    }
+    if (genre === 'all genres') {
+      return data?.allBooks;
+    }
+  }, [data?.allBooks, genre]);
+
+  const booksGenre = [
+    ...new Set(data?.allBooks?.flatMap((books) => books.genres)),
+    'all genres',
+  ];
+
   if (!props.show) {
     return null;
   }
@@ -26,7 +43,7 @@ const Books = (props) => {
               <th>author</th>
               <th>published</th>
             </tr>
-            {data.allBooks.map((a) => (
+            {filterByGenre.map((a) => (
               <tr key={a.title}>
                 <td>{a.title}</td>
                 <td>{a.author.name}</td>
@@ -35,6 +52,11 @@ const Books = (props) => {
             ))}
           </tbody>
         </table>
+        {booksGenre.map((book) => (
+          <button key={book} onClick={() => setGenre(book)}>
+            {book}
+          </button>
+        ))}
       </div>
     );
   }
