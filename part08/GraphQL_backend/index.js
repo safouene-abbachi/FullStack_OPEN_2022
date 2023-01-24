@@ -183,7 +183,9 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args, context) => {
+      console.log('🚀 ~ context', context);
       const currentUser = context.currentUser;
+      console.log('🚀 ~ currentUser', currentUser);
       if (!currentUser) {
         throw new UserInputError('user must be logged in!');
       }
@@ -272,6 +274,7 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     const auth = req.headers ? req.headers.authorization : null;
+
     if (auth && auth.toLocaleLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
       const currentUser = await User.findById(decodedToken.id);
