@@ -1,26 +1,23 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ALL_BOOKS } from '../queries';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
 const Books = (props) => {
-  const { error, loading, data } = useQuery(ALL_BOOKS);
   const [genre, setGenre] = useState('all genres');
-  const filterByGenre = useMemo(() => {
-    if (genre && genre !== 'all genres') {
-      return data?.allBooks?.filter((book) => {
-        return book.genres.includes(genre);
-      });
-    }
-    if (genre === 'all genres') {
-      return data?.allBooks;
-    }
-  }, [data?.allBooks, genre]);
+  const { loading, error, data } = useQuery(ALL_BOOKS);
+  const [allBooks, { data: refetchedData }] = useLazyQuery(ALL_BOOKS);
+
+  const booksToShow = genre === 'all genres' ? data : refetchedData;
 
   const booksGenre = [
     ...new Set(data?.allBooks?.flatMap((books) => books.genres)),
     'all genres',
   ];
 
+  const handleChange = (bookGenre) => {
+    setGenre(bookGenre);
+    allBooks({ variables: { genre: bookGenre } });
+  };
   if (!props.show) {
     return null;
   }
@@ -45,7 +42,7 @@ const Books = (props) => {
               <th>author</th>
               <th>published</th>
             </tr>
-            {filterByGenre.map((a) => (
+            {booksToShow?.allBooks.map((a) => (
               <tr key={a.title}>
                 <td>{a.title}</td>
                 <td>{a.author.name}</td>
@@ -56,7 +53,7 @@ const Books = (props) => {
         </table>
 
         {booksGenre.map((book) => (
-          <button key={book} onClick={() => setGenre(book)}>
+          <button key={book} onClick={() => handleChange(book)}>
             {book}
           </button>
         ))}
